@@ -1,0 +1,16 @@
+{
+    "_output_dir": "/home/rage/emencia/cookiecutter-sveetch-djangoapp/dist",
+    "_repo_dir": ".",
+    "_sveetch_djangoapp_version": "0.5.0",
+    "_template": ".",
+    "app_name": "firm_info",
+    "author_email": "lafaye@emencia.com",
+    "author_name": "Philippe Lafaye",
+    "author_username": "rage2000",
+    "enable_drf": false,
+    "package_name": "django-firm-info",
+    "project_name": "Django Firm Info",
+    "project_short_description": "A Django application package for storage firm info",
+    "pypi_username": "rage2000",
+    "version": "0.1.0"
+}

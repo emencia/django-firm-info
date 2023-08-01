@@ -1,0 +1,24 @@
+<ul class="text-gray-700 list-unstyled">
+  {% if email %}
+  <li class="pb-1">
+       <a href="#" class="text-gray-700">
+        {{ email }}
+        </a>
+  </li>
+  {% else %}
+  {% endif %}
+  {% if phone %}
+  <li class="pb-1">
+      <a href="#" class="text-gray-700">
+        {{ phone }}
+        </a>
+  </li>
+  {% else %}
+  {% endif %}
+  {% if address %}
+  <li class="pb-1">
+    {{ address }}
+  </li>
+  {% else %}
+  {% endif %}
+</ul>

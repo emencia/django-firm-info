@@ -1,0 +1,15 @@
+<ul class="list-inline d-flex my-2 mb-lg-0 justify-content-center justify-content-lg-start">
+  {% if og_image %}
+    <li class="list-inline-item">
+      <img src="{{ og_image.url }}" class="w-50">
+    </li>
+  {% endif %}
+
+  {% if og_description %}
+    <li class="list-inline-item">{{ og_description }}</li>
+  {% endif %}
+
+  {% if og_twitter_site %}
+    <li class="list-inline-item">{{ og_twitter_site }}</li>
+  {% endif %}
+</ul>

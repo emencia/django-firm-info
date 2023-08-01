@@ -1,0 +1,6 @@
+{% load sorl_thumbnail %}
+{% if logo %}
+{% thumbnail logo "x64" crop="center" quality="100" format="PNG" as thumb %}
+<a href="/" class="pb-3"><img src="{{ thumb.url }}" alt="{{ item.title }}" alt="Footer Logo"></a>
+{% endthumbnail %}
+{% endif %}

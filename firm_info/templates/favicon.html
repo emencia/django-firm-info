@@ -1,0 +1,6 @@
+{% load sorl_thumbnail %}
+  {% if favicon %}
+  {% thumbnail favicon "60x60" crop="center" quality="100" format="PNG" as thumb %}
+  <link rel="shortcut icon" type="image/png" href="{{ thumb.url }}"/>
+  {% endthumbnail %}
+{% endif %}
