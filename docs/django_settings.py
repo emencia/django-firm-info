@@ -159,6 +159,17 @@ INSTALLED_APPS = [
 
 
 """
+Django smart media configuration using its defaults
+"""
+from smart_media.settings import *  # noqa: E402,F401,F403
+
+INSTALLED_APPS.extend([
+    "sorl.thumbnail",
+    "smart_media",
+])
+
+
+"""
 SPECIFIC BASE APPLICATIONS SETTINGS BELOW
 """
-from firm_info.settings import *
+from firm_info.defaults import *
