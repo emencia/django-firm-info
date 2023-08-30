@@ -4,6 +4,14 @@
 History
 =======
 
+0.1.3 (2023-08-30)
+------------------
+
+Fix
+~~~
+*  Typo in publish_to_pypi.yml workflow. [Lafaye Philippe]
+
+
 0.1.2 (2023-08-30)
 ------------------
 
