@@ -4,6 +4,19 @@
 History
 =======
 
+0.1.2 (2023-08-30)
+------------------
+
+New
+~~~
+*  Create github release when new tag that match [0-9]+.[0-9]+.[0-9]+ name. [Lafaye Philippe]
+
+
+Changes
+~~~~~~~
+*  publish on pypi when release was created. [Lafaye Philippe]
+
+
 0.1.1 (2023-08-30)
 ------------------
 
