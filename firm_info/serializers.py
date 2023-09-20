@@ -34,7 +34,11 @@ def serialize_firm_info(queryset):
         {
             "email": "email@mail.com",
             "phone": "003369856321",
-            "address": "1 avenue Charles de Gaulle, 99999 Paris"
+            "full_address": "1 avenue Charles de Gaulle, 99999 Paris France",
+            "address": "1 avenue Charles de Gaulle",
+            "postal_code": "99999",
+            "city": "Paris",
+            "country": "France",
         }
         ```
     """
@@ -45,7 +49,11 @@ def serialize_firm_info(queryset):
         return {
             "email": firm_info.get("email"),
             "phone": firm_info.get("phone_number"),
-            "address": _format_address(firm_info),
+            "full_address": _format_address(firm_info),
+            "address": firm_info.get("address"),
+            "postal_code": firm_info.get("postal_code"),
+            "city": firm_info.get("city"),
+            "country": firm_info.get("country"),
         }
     except Exception as err:
         raise SerializeFirmError from err

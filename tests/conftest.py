@@ -29,7 +29,11 @@ def serialized_contact():
     return {
         "email": "contact@example.com",
         "phone": "1234567890",
-        "address": "1234 Main St, 12345 Anytown USA"
+        'address': '1234 Main St',
+        'city': 'Anytown',
+        'country': 'USA',
+        'full_address': '1234 Main St, 12345 Anytown USA',
+        'postal_code': '12345',
     }
 
 
