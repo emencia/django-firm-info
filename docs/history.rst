@@ -4,6 +4,21 @@
 History
 =======
 
+0.1.4 (2023-09-21)
+------------------
+
+Changes
+~~~~~~~
+*  Modify firm_info tag (Ticket #4942172) [Samy Saad]
+
+  - Add address parts as context variables in simple_tag
+  - Rename `address` context variable to `fill_address`
+
+Other
+~~~~~
+* [DOC] Add models, templatetags and serializers doc. [Samy Saad]
+
+
 0.1.3 (2023-08-30)
 ------------------
 
