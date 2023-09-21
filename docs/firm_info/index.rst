@@ -1,10 +1,14 @@
-.. _intro_django-app:
+.. _intro_firm-info:
 
 ==================
-Django application
+Django firm info
 ==================
 
 .. toctree::
    :maxdepth: 2
 
    models.rst
+
+   serializers.rst
+
+   templatetags.rst

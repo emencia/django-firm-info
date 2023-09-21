@@ -1,3 +1,4 @@
+import contextlib
 from django.core.exceptions import ObjectDoesNotExist
 from django.template import Library, loader
 from firm_info.models import AppsBanner, FirmContact, Link, SocialSharing, Tracking
@@ -18,31 +19,19 @@ def firm_contact(template_path):
     Renders the template which path is provided as param
     using FirmContact only instance serialized contact data.
 
-    - Usage:
+    Args:
+        template_path (str): The path to the template file.
 
-    ```html
-    {% load firm_info %}
+    Returns:
+        str: The rendered HTML output of the firm contact informations.
 
-    {% firm_contact "path/to/template.html" %}
-    ```
+    Usage:
 
-    - Improvement:
+    .. code-block:: html
 
-    Could use a cached template loader instead of loader.get_template()
+        {% load firm_info %}
+        {% firm_contact "path/to/template.html" %}
 
-    ```python
-    from django.core.cache import cache
-
-    template_cache_key = f'firm_contact_template_{template_path}'
-    template = cache.get(template_cache_key)
-    if template is None:
-        cache.set(...)
-    contact_cache_key = f'firm_contact_info'
-    contact = cache.get(contact_cache_key)
-    if contact is None:
-        contact = FirmContact.objects.first()
-        cache.set(...)
-    ```
     """
     qs_firm_info = FirmContact.objects.all()
     if qs_firm_info.exists():
@@ -61,13 +50,19 @@ def firm_social_links(template_path):
     using all social network link objects serialized data
     related the only FirmContact instance.
 
-    Usage:
-    ```
-    html
-    {% load firm_info %}
+    Args:
+        template_path (str): The path to the template file.
 
-    {% firm_social_links "path/to/template.html" %}
-    ```
+    Returns:
+        str: The rendered HTML output of the firm social networks links.
+
+    Usage:
+
+    .. code-block:: html
+
+        {% load firm_info %}
+        {% firm_social_links "path/to/template.html" %}
+
     """
     links = Link.objects.all()
     if links.exists():
@@ -85,13 +80,19 @@ def firm_description(template_path):
     Renders the template which path is provided as param
     using FirmContact only instance serialized description data.
 
-    Usage:
-    ```
-    html
-    {% load firm_info %}
+    Args:
+        template_path (str): The path to the template file.
 
-    {% firm_description "path/to/template.html" %}
-    ```
+    Returns:
+        str: The rendered HTML output of the firm description.
+
+    Usage:
+
+    .. code-block:: html
+
+        {% load firm_info %}
+        {% firm_description "path/to/template.html" %}
+
     """
     qs_firm_info = FirmContact.objects.all()
     if qs_firm_info.exists():
@@ -106,16 +107,21 @@ def firm_description(template_path):
 @register.simple_tag(name="firm_logos")
 def firm_logos(template_path):
     """
-    Renders the template which path is provided as param
-    using Firm logos.
+    Renders the firm logos using the specified template.
+
+    Args:
+        template_path (str): The path to the template file.
+
+    Returns:
+        str: The rendered HTML output of the firm logos.
 
     Usage:
-    ```
-    html
-    {% load firm_info %}
 
-    {% firm_logos "path/to/template.html" %}
-    ```
+    .. code-block:: html
+
+        {% load firm_info %}
+        {% firm_logos "path/to/template.html" %}
+
     """
     firm_instance = FirmContact.objects.first()
     if firm_instance:
@@ -138,13 +144,19 @@ def firm_social_shares(template_path):
     using all social network shares link objects serialized data
     related the only SocialSharing instance.
 
-    Usage:
-    ```
-    html
-    {% load firm_info %}
+    Args:
+        template_path (str): The path to the template file.
 
-    {% firm_social_shares "path/to/template.html" %}
-    ```
+    Returns:
+        str: The rendered HTML output of the firm social media shares.
+
+    Usage:
+
+    .. code-block:: html
+
+        {% load firm_info %}
+        {% firm_social_shares "path/to/template.html" %}
+
     """
     social_shares = SocialSharing.objects.first()
 
@@ -160,20 +172,53 @@ def firm_social_shares(template_path):
 
 @register.filter("firm_tag_analytic")
 def firm_tag_analytic(value=None):
+    """
+    Filters the firm tag analytic value.
+
+    Args:
+        value: The input value (not used).
+
+    Returns:
+        str: The tag analytic value from the first Tracking object if it exists,
+        otherwise an empty string.
+
+    Usage:
+
+    .. code-block:: html
+
+        {% load firm_info %}
+        {% firm_tag_analytic "path/to/template.html" %}
+
+    """
     return Tracking.objects.first().tag_analytic if Tracking.objects.exists() else ""
 
 
 @register.simple_tag(name="app_banner")
 def app_banner(app_type, template_path):
+    """
+    Renders the app banner using the specified template and application type.
+
+    Args:
+        app_type (str): The application type.
+        template_path (str): The path to the template file.
+
+    Returns:
+        str: The rendered HTML output of the app banner.
+
+    Usage:
+
+    .. code-block:: html
+
+        {% load firm_info %}
+        {% app_banner "path/to/template.html" %}
+
+    """
     context = {}
     template = loader.get_template(template_path)
 
-    try:
+    with contextlib.suppress(ObjectDoesNotExist):
         app_banner = AppsBanner.objects.get(application_type=app_type)
         context = serialize_firm_apps_banner(app_banner)
-    except ObjectDoesNotExist:
-        pass
-
     rendered = template.render(context)
 
     return rendered

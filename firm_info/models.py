@@ -8,6 +8,26 @@ from smart_media.signals import auto_purge_files_on_change, auto_purge_files_on_
 
 
 class FirmContact(models.Model):
+    """
+    Represents the contact information for a firm.
+
+    Args:
+        models.Model: The base model class provided by Django.
+
+    Attributes:
+        phone_number (CharField): The phone number of the firm.
+        email (EmailField): The email address of the firm.
+        address (CharField): The address of the firm.
+        postal_code (CharField): The postal code of the firm.
+        city (CharField): The city of the firm.
+        country (CharField): The country of the firm.
+        baseline (CharField): The baseline of the firm.
+        short_description (TextField): The short description of the firm.
+        logo (SmartMediaField): The logo of the firm.
+        logo_invert (SmartMediaField): The inverted logo of the firm.
+        favicon (SmartMediaField): The favicon of the firm.
+        objects (SingletonManager): The manager for the FirmContact model.
+    """
     phone_number = models.CharField(max_length=20, null=False, blank=True, default="")
     email = models.EmailField(null=False, blank=True, default="")
     address = models.CharField(max_length=255, null=False, blank=True, default="")
@@ -61,6 +81,17 @@ pre_save.connect(
 
 
 class Link(models.Model):
+    """
+    Represents a social network link.
+
+    Attributes:
+        SOCIAL_NETWORK_NAMES (tuple): Choices for the name field representing
+            various social network names.
+        name (CharField): The name of the social network.
+        url (URLField): The URL of the social network link.
+        client_contact (ForeignKey): The foreign key to the FirmContact model
+            representing the client contact.
+    """
     SOCIAL_NETWORK_NAMES = (
         ("linkedin", "linkedin"),
         ("facebook", "facebook"),
@@ -93,6 +124,15 @@ class Link(models.Model):
 
 
 class SocialSharing(models.Model):
+    """
+    Represents social media sharing information.
+
+    Attributes:
+        og_image (SmartMediaField): The OG image for social media sharing.
+        og_description (TextField): The OG description for social media sharing.
+        og_twitter_site (CharField): The OG Twitter site for social media sharing.
+    """
+
     og_image = SmartMediaField(
         _("OG Image"),
         null=True,
@@ -135,6 +175,13 @@ pre_save.connect(
 
 
 class Tracking(models.Model):
+    """
+    Represents tracking information.
+
+    Attributes:
+        tag_analytic (CharField): The tag analytic for tracking.
+    """
+
     tag_analytic = models.CharField(
         max_length=100,
         null=False,
@@ -149,6 +196,21 @@ class Tracking(models.Model):
 
 
 class AppsBanner(models.Model):
+    """
+    Represents an app banner in the Django firm_info models.
+
+    Args:
+        models.Model: The base model class provided by Django.
+
+    Attributes:
+        APPS_CHOICES (list): A list of tuples representing the available choices for
+            the application type.
+        application_type (models.CharField): The type of the application.
+        image (SmartMediaField): The image associated with the app banner.
+        title (models.CharField): The title of the app banner.
+        description (HTMLField): The description of the app banner.
+    """
+
     APPS_CHOICES = [
         ("application_sent", _("Application sent")),
         ("free_apply", _("Free apply")),
