@@ -20,7 +20,11 @@ def test_firm_contact_tag(db, firm_contact_obj, serialized_contact):
     expected_output = "\n".join([
         f"<p>Email: {serialized_contact['email']}</p>",
         f"<p>Phone: {serialized_contact['phone']}</p>",
-        f"<p>Address: {serialized_contact['address']}</p>"
+        f"<p>Full address: {serialized_contact['full_address']}</p>",
+        f"<p>Address: {serialized_contact['address']}</p>",
+        f"<p>city: {serialized_contact['city']}</p>",
+        f"<p>postal code: {serialized_contact['postal_code']}</p>",
+        f"<p>country: {serialized_contact['country']}</p>"
     ])
     assert rendered == expected_output
 
