@@ -13,8 +13,9 @@ class MyAppBaseException(Exception):
     pass
 
 
-class DummyError(MyAppBaseException):
+class SerializeFirmError(MyAppBaseException):
     """
-    Dummy exception sample to raise from your code.
+    Exceptions related to FirmContact serialization errors
+    during template tag generation.
     """
     pass
