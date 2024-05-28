@@ -7,6 +7,7 @@ from pathlib import Path
 
 SECRET_KEY = "***TOPSECRET***"
 
+DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
 
 # Root of project repository
 BASE_DIR = Path(__file__).parents[2]
