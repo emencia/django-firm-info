@@ -1,7 +1,8 @@
 """
 Django settings for tests
 """
-from sandbox.settings.base import *  # noqa: F403
+# flake8: noqa: F403,F405
+from sandbox.settings.base import *
 
 DATABASES = {
     "default": {
@@ -12,4 +13,4 @@ DATABASES = {
 
 # Media directory dedicated to tests to avoid polluting other environment
 # media directory
-MEDIA_ROOT = VAR_PATH / "media-tests"  # noqa: F405
+MEDIA_ROOT = VAR_PATH / "media-tests"
