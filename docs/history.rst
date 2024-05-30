@@ -4,6 +4,21 @@
 History
 =======
 
+0.1.5 (2024-05-30)
+------------------
+
+Changes
+~~~~~~~
+*  [CHG] Added global context accessibility in template tags (Ticket #5289453) [Samy Saad]
+
+
+Other
+~~~~~
+* [CHG] Removed dj4.0 and dj4.1 from tox tests [Samy Saad]
+* [FIX] Added default autofield in settings [Samy Saad]
+* [FIX] Fixed rtd build [Samy Saad]
+* [DOC] Updated doc [Samy Saad]
+
 0.1.4 (2023-09-21)
 ------------------
 
