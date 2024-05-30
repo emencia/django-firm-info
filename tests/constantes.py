@@ -30,7 +30,7 @@ SERIALIZED_CONTACT = {
 }
 
 
-SERILAIZED_SOCIAL_LINKS = {
+SERIALIZED_SOCIAL_LINKS = {
     "facebook": "http://facebook.com/example",
     "twitter": "http://twitter.com/example",
 }

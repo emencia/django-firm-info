@@ -7,7 +7,7 @@ from firm_info.serializers import (
 )
 
 from .constantes import (
-    SERILAIZED_SOCIAL_LINKS
+    SERIALIZED_SOCIAL_LINKS
 )
 
 
@@ -34,7 +34,7 @@ def test_serialize_firm_info(db, firm_contact_obj):
 
 def test_serialize_firm_social(db, firm_social_links_objs):
     queryset = Link.objects.all()
-    expected_output = SERILAIZED_SOCIAL_LINKS
+    expected_output = SERIALIZED_SOCIAL_LINKS
     assert serialize_firm_social(queryset) == expected_output
 
 
