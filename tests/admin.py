@@ -5,6 +5,8 @@ from django.contrib.auth import get_user_model
 from firm_info.models import FirmContact
 from tests.utils import get_admin_add_url
 
+from .constantes import RAW_CONTACT
+
 
 User = get_user_model()
 
@@ -23,7 +25,7 @@ def admin_client(client, admin_user):
     return client
 
 
-def test_firm_contact_create(db, admin_client, raw_contact):
+def test_firm_contact_create(db, admin_client):
     # Check that admin client can access the admin interface
     url = reverse("admin:index")
     response = admin_client.get(url)
@@ -35,11 +37,11 @@ def test_firm_contact_create(db, admin_client, raw_contact):
     assert response.status_code == 200
 
     # needed for post in admin chg
-    raw_contact.update({
+    RAW_CONTACT.update({
         "link_set-TOTAL_FORMS": 1,
         "link_set-INITIAL_FORMS": 0
     })
-    response = admin_client.post(url, raw_contact)
+    response = admin_client.post(url, RAW_CONTACT)
     assert response.status_code == 302
 
     # Check that the FirmContact instance was created
@@ -55,11 +57,11 @@ def test_firm_contact_create(db, admin_client, raw_contact):
         )
     assert qs_firm_contact_values is not None
     assert all((
-        item in raw_contact.items()
+        item in RAW_CONTACT.items()
         for item in qs_firm_contact_values[0].items()
     ))
 
     # Check that the admin can't create another instance
-    response = admin_client.post(url, raw_contact)
+    response = admin_client.post(url, RAW_CONTACT)
     assert response.status_code == 403
     assert FirmContact.objects.filter().count() == 1

@@ -12,3 +12,7 @@ Django firm info
    serializers.rst
 
    templatetags.rst
+
+   exceptions.rst
+
+   managers.rst

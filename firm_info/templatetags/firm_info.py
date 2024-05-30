@@ -13,8 +13,8 @@ from firm_info.serializers import (
 register = Library()
 
 
-@register.simple_tag(name="firm_contact")
-def firm_contact(template_path):
+@register.simple_tag(takes_context=True, name="firm_contact")
+def firm_contact(context, template_path):
     """
     Renders the template which path is provided as param
     using FirmContact only instance serialized contact data.
@@ -36,15 +36,16 @@ def firm_contact(template_path):
     qs_firm_info = FirmContact.objects.all()
     if qs_firm_info.exists():
         template = loader.get_template(template_path)
-        context = serialize_firm_info(qs_firm_info)
-        rendered = template.render(context)
+        specific_context = serialize_firm_info(qs_firm_info)
+        combined_context = {**context.flatten(), **specific_context}
+        rendered = template.render(combined_context)
         return rendered
     else:
         return ''
 
 
-@register.simple_tag(name="firm_social_links")
-def firm_social_links(template_path):
+@register.simple_tag(takes_context=True, name="firm_social_links")
+def firm_social_links(context, template_path):
     """
     Renders the template which path is provided as param
     using all social network link objects serialized data
@@ -67,15 +68,16 @@ def firm_social_links(template_path):
     links = Link.objects.all()
     if links.exists():
         template = loader.get_template(template_path)
-        context = serialize_firm_social(links)
-        rendered = template.render(context)
+        specific_context = serialize_firm_social(links)
+        combined_context = {**context.flatten(), **specific_context}
+        rendered = template.render(combined_context)
         return rendered
     else:
         return ''
 
 
-@register.simple_tag(name="firm_description")
-def firm_description(template_path):
+@register.simple_tag(takes_context=True, name="firm_description")
+def firm_description(context, template_path):
     """
     Renders the template which path is provided as param
     using FirmContact only instance serialized description data.
@@ -97,15 +99,16 @@ def firm_description(template_path):
     qs_firm_info = FirmContact.objects.all()
     if qs_firm_info.exists():
         template = loader.get_template(template_path)
-        context = serialize_firm_description(qs_firm_info)
-        rendered = template.render(context)
+        specific_context = serialize_firm_description(qs_firm_info)
+        combined_context = {**context.flatten(), **specific_context}
+        rendered = template.render(combined_context)
         return rendered
     else:
         return ''
 
 
-@register.simple_tag(name="firm_logos")
-def firm_logos(template_path):
+@register.simple_tag(takes_context=True, name="firm_logos")
+def firm_logos(context, template_path):
     """
     Renders the firm logos using the specified template.
 
@@ -126,19 +129,20 @@ def firm_logos(template_path):
     firm_instance = FirmContact.objects.first()
     if firm_instance:
         template = loader.get_template(template_path)
-        context = {
+        specific_context = {
             "logo": getattr(firm_instance, "logo", None),
             "logo_invert": getattr(firm_instance, "logo_invert", None),
             "favicon": getattr(firm_instance, "favicon", None),
         }
-        rendered = template.render(context)
+        combined_context = {**context.flatten(), **specific_context}
+        rendered = template.render(combined_context)
         return rendered
     else:
         return ''
 
 
-@register.simple_tag(name="firm_social_shares")
-def firm_social_shares(template_path):
+@register.simple_tag(takes_context=True, name="firm_social_shares")
+def firm_social_shares(context, template_path):
     """
     Renders the template which path is provided as param
     using all social network shares link objects serialized data
@@ -162,8 +166,9 @@ def firm_social_shares(template_path):
 
     if social_shares:
         template = loader.get_template(template_path)
-        context = serialize_firm_social_sharing(social_shares)
-        rendered = template.render(context)
+        specific_context = serialize_firm_social_sharing(social_shares)
+        combined_context = {**context.flatten(), **specific_context}
+        rendered = template.render(combined_context)
 
         return rendered
     else:
@@ -193,8 +198,8 @@ def firm_tag_analytic(value=None):
     return Tracking.objects.first().tag_analytic if Tracking.objects.exists() else ""
 
 
-@register.simple_tag(name="app_banner")
-def app_banner(app_type, template_path):
+@register.simple_tag(takes_context=True, name="app_banner")
+def app_banner(context, app_type, template_path):
     """
     Renders the app banner using the specified template and application type.
 
@@ -218,7 +223,8 @@ def app_banner(app_type, template_path):
 
     with contextlib.suppress(ObjectDoesNotExist):
         app_banner = AppsBanner.objects.get(application_type=app_type)
-        context = serialize_firm_apps_banner(app_banner)
-    rendered = template.render(context)
+        specific_context = serialize_firm_apps_banner(app_banner)
+        combined_context = {**context.flatten(), **specific_context}
+    rendered = template.render(combined_context)
 
     return rendered

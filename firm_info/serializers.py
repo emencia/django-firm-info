@@ -1,5 +1,4 @@
-class SerializeFirmError(Exception):
-    pass
+from firm_info.exceptions import SerializeFirmError
 
 
 def _format_address(firm_info: dict) -> str:

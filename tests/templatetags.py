@@ -1,5 +1,10 @@
 import pytest
-from django.template import Context, Template
+
+from html import escape
+
+from django.template import RequestContext, Template
+from django.test import RequestFactory
+
 from firm_info.models import FirmContact, Link
 from firm_info.factories import TrackingFactory
 from firm_info.templatetags.firm_info import (
@@ -9,50 +14,67 @@ from firm_info.templatetags.firm_info import (
     firm_tag_analytic,
 )
 
+from .constantes import SERIALIZED_SOCIAL_LINKS
 
-def test_firm_contact_tag(db, firm_contact_obj, serialized_contact):
+
+def test_firm_contact_tag(db, firm_contact_obj):
     template_path = "tests/templatetags/firm_info/test_firm_contact.html"
-    context = Context()
+
+    request = RequestFactory().get('/')
+    context = RequestContext(request)
+
     context["firm"] = firm_contact_obj
-    output = firm_contact(template_path)
+    output = firm_contact(context, template_path)
     template = Template(output)
     rendered = template.render(context)
     expected_output = "\n".join([
-        f"<p>Email: {serialized_contact['email']}</p>",
-        f"<p>Phone: {serialized_contact['phone']}</p>",
-        f"<p>Full address: {serialized_contact['full_address']}</p>",
-        f"<p>Address: {serialized_contact['address']}</p>",
-        f"<p>city: {serialized_contact['city']}</p>",
-        f"<p>postal code: {serialized_contact['postal_code']}</p>",
-        f"<p>country: {serialized_contact['country']}</p>"
+        "<p>Email: {}</p>".format(firm_contact_obj.email),
+        "<p>Phone: {}</p>".format(firm_contact_obj.phone_number),
+        "<p>Full address: {}, {} {} {}</p>".format(
+            firm_contact_obj.address,
+            firm_contact_obj.postal_code,
+            firm_contact_obj.city,
+            firm_contact_obj.country,
+        ),
+        "<p>Address: {}</p>".format(escape(firm_contact_obj.address)),
+        "<p>city: {}</p>".format(escape(firm_contact_obj.city)),
+        "<p>postal code: {}</p>".format(escape(firm_contact_obj.postal_code)),
+        "<p>country: {}</p>".format(escape(firm_contact_obj.country))
     ])
     assert rendered == expected_output
 
 
-def test_firm_social_links_tag(db, firm_social_links_objs, serialized_social_links):
+def test_firm_social_links_tag(db, firm_social_links_objs):
     template_path = "tests/templatetags/firm_info/test_links.html"
-    context = Context()
+
+    request = RequestFactory().get('/')
+    context = RequestContext(request)
+
     context["links"] = firm_social_links_objs
-    output = firm_social_links(template_path)
+    output = firm_social_links(context, template_path)
     template = Template(output)
     rendered = template.render(context)
     expected_output = "\n".join([
-        f"<a href=\"{serialized_social_links['facebook']}\">facebook</a><br>",
-        f"<a href=\"{serialized_social_links['twitter']}\">twitter</a><br>"
+        f"<a href=\"{SERIALIZED_SOCIAL_LINKS['facebook']}\">facebook</a><br>",
+        f"<a href=\"{SERIALIZED_SOCIAL_LINKS['twitter']}\">twitter</a><br>"
     ])
     assert rendered == expected_output
 
 
-def test_firm_description_tag(db, firm_contact_obj, serialized_firm_description):
+def test_firm_description_tag(firm_contact_obj):
     template_path = "tests/templatetags/firm_info/test_firm_description.html"
-    context = Context()
+
+    factory = RequestFactory()
+    request = factory.get('/')
+    context = RequestContext(request)
+
     context["description"] = firm_contact_obj
-    output = firm_description(template_path)
+    output = firm_description(context, template_path)
     template = Template(output)
     rendered = template.render(context)
     expected_output = "\n".join([
-        f"<p>Baseline: {serialized_firm_description['baseline']}</p>",
-        f"<p>Short_description: {serialized_firm_description['short_description']}</p>",
+        f"<p>Baseline: {escape(firm_contact_obj.baseline)}</p>",
+        f"<p>Short_description: {escape(firm_contact_obj.short_description)}</p>",
     ])
     assert rendered == expected_output
 
@@ -67,9 +89,12 @@ def test_firm_description_tag(db, firm_contact_obj, serialized_firm_description)
 )
 def test_not_rendered_without_objs(db, template_path, Model):
     template_path = template_path
-    context = Context()
+
+    request = RequestFactory().get('/')
+    context = RequestContext(request)
+
     context["firm"] = Model.objects.none()
-    output = firm_contact(template_path)
+    output = firm_contact(context, template_path)
     template = Template(output)
     rendered = template.render(context)
     assert rendered == ""

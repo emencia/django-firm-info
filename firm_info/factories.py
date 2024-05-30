@@ -7,7 +7,7 @@ from django.core.files import File
 import factory
 from firm_info.models import Tracking
 
-from .models import AppsBanner
+from .models import AppsBanner, FirmContact
 
 
 def create_image_file(filename=None, size=(100, 100), color="blue",
@@ -103,4 +103,34 @@ class AppsBannerFactory(factory.django.DjangoModelFactory):
             django.core.files.File: File object.
         """
 
+        return create_image_file()
+
+
+class FirmContactFactory(factory.django.DjangoModelFactory):
+    """
+    Factory to create instance of a FirmContact.
+    """
+
+    phone_number = factory.Faker("phone_number")
+    email = factory.Faker("email")
+    address = factory.Faker("address")
+    postal_code = factory.Faker("postcode")
+    city = factory.Faker("city")
+    country = factory.Faker("country")
+    baseline = factory.Faker("text", max_nb_chars=255)
+    short_description = factory.Faker("text")
+
+    class Meta:
+        model = FirmContact
+
+    @factory.lazy_attribute
+    def logo(self):
+        return create_image_file()
+
+    @factory.lazy_attribute
+    def logo_invert(self):
+        return create_image_file()
+
+    @factory.lazy_attribute
+    def favicon(self):
         return create_image_file()
