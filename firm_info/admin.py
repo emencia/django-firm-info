@@ -6,6 +6,36 @@ from smart_media.admin import SmartModelAdmin
 from .models import AppsBanner, FirmContact, Link, SocialSharing, Tracking
 
 
+class UniqueModelAdmin(admin.ModelAdmin):
+    """
+    A custom ModelAdmin that restricts the addition of model instances to only one.
+
+    This admin class overrides the default add permission to ensure that only one
+    instance of the associated model can exist at any given time.
+    If an instance already exists, it prohibits adding new instances.
+
+    Methods:
+        has_add_permission(self, request): Checks if adding a new instance is
+            permissible.
+        clean(self): Validates that there is not more than one instance of the model.
+    """
+
+    def has_add_permission(self, request):
+        existing_count = self.model.objects.count()
+        if existing_count == 0:
+            return super().has_add_permission(request)
+        else:
+            return False
+
+    def clean(self):
+        existing_count = self.model.objects.count()
+        if existing_count > 1:
+            # raise validation error if there is more than one firm contact
+            raise ValidationError(
+                _("Only one {} instance allowed.").format(self.model.__name__)
+            )
+
+
 @admin.register(Link)
 class LinkAdmin(admin.ModelAdmin):
     pass
@@ -17,31 +47,18 @@ class LinkInline(admin.TabularInline):
 
 
 @admin.register(FirmContact)
-class ClientContactAdmin(admin.ModelAdmin):
+class ClientContactAdmin(UniqueModelAdmin):
     inlines = [LinkInline]
     formfield_overrides = SmartModelAdmin.formfield_overrides
 
-    def has_add_permission(self, request):
-        existing_count = FirmContact.objects.count()
-        if existing_count == 0:
-            return super().has_add_permission(request)
-        else:
-            return False
-
-    def clean(self):
-        existing_count = FirmContact.objects.count()
-        if existing_count > 1:
-            # raise validation error if there is more than one firm contact
-            raise ValidationError(_("Only one FirmContact instance allowed."))
-
 
 @admin.register(SocialSharing)
-class SocialSharingAdmin(admin.ModelAdmin):
+class SocialSharingAdmin(UniqueModelAdmin):
     pass
 
 
 @admin.register(Tracking)
-class TrackingAdmin(admin.ModelAdmin):
+class TrackingAdmin(UniqueModelAdmin):
     pass
 
 

@@ -2,6 +2,9 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 
+SINGLETON_ERROR = _("Model {model_name} has already one instance")
+
+
 class SingletonManager(models.Manager):
     """
     A manager to ensure that only one instance of the model exists.
@@ -16,8 +19,7 @@ class SingletonManager(models.Manager):
     """
     def create(self, **kwargs):
         if self.model.objects.exists():
-            error_message = _("Model {model_name} has already one instance")
             raise ValueError(
-                error_message.format(model_name=self.model._meta.verbose_name)
+                SINGLETON_ERROR.format(model_name=self.model._meta.verbose_name)
             )
         return super().create(**kwargs)

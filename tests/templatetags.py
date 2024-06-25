@@ -5,19 +5,22 @@ from html import unescape
 from django.template import RequestContext, Template
 from django.test import RequestFactory
 
+from firm_info.factories import AppsBannerFactory, FirmContactFactory, SocialSharingFactory
 from firm_info.models import FirmContact, Link
-from firm_info.factories import TrackingFactory
 from firm_info.templatetags.firm_info import (
+    app_banner,
     firm_contact,
     firm_description,
+    firm_logos,
     firm_social_links,
-    firm_tag_analytic,
+    firm_social_shares,
 )
 
 from .constantes import SERIALIZED_SOCIAL_LINKS
 
 
-def test_firm_contact_tag(db, firm_contact_obj):
+def test_firm_contact_tag(db):
+    firm_contact_obj = FirmContactFactory()
     template_path = "tests/templatetags/firm_info/test_firm_contact.html"
 
     request = RequestFactory().get('/')
@@ -61,7 +64,8 @@ def test_firm_social_links_tag(db, firm_social_links_objs):
     assert rendered == expected_output
 
 
-def test_firm_description_tag(firm_contact_obj):
+def test_firm_description_tag(db):
+    firm_contact_obj = FirmContactFactory()
     template_path = "tests/templatetags/firm_info/test_firm_description.html"
 
     factory = RequestFactory()
@@ -77,6 +81,79 @@ def test_firm_description_tag(firm_contact_obj):
         f"<p>Short_description: {firm_contact_obj.short_description}</p>",
     ])
     assert unescape(rendered) == expected_output
+
+
+def test_firm_logos_tag(db):
+    firm_contact_obj = FirmContactFactory()
+    template_path = "tests/templatetags/firm_info/test_firm_logos.html"
+
+    request = RequestFactory().get('/')
+    context = RequestContext(request)
+
+    context["firm"] = firm_contact_obj
+    output = firm_logos(context, template_path)
+    template = Template(output)
+    rendered = template.render(context)
+    expected_output = "\n".join([
+        f"<img src=\"{firm_contact_obj.logo.url}\" alt=\"Logo\">",
+        f"<img src=\"{firm_contact_obj.logo_invert.url}\" alt=\"Inverted Logo\">",
+        f"<link rel=\"shortcut icon\" href=\"{firm_contact_obj.favicon.url}\">"
+    ])
+    assert unescape(rendered) == expected_output
+
+
+@pytest.mark.parametrize(
+    "app_type",
+    [
+        AppsBannerFactory._meta.model.APPS_CHOICES[0][0],
+        AppsBannerFactory._meta.model.APPS_CHOICES[1][0]
+    ]
+)
+def test_app_banner(db, app_type):
+    template_path = "tests/templatetags/firm_info/test_app_banner.html"
+
+    request = RequestFactory().get('/')
+    context = RequestContext(request)
+
+    instance = AppsBannerFactory(application_type=app_type)
+    context["app_banner"] = instance
+    output = app_banner(context, app_type, template_path)
+    template = Template(output)
+    rendered = template.render(context)
+    expected_output = "\n".join([
+        "<div id=\"app-banner\">",
+        f"<img src=\"{instance.image.url}\" alt=\"{instance.title}\">",
+        f"<h1>{instance.title}</h1>",
+        f"<p>{instance.description}</p>",
+        "</div>"
+    ])
+
+    assert unescape(rendered).strip() == expected_output.strip()
+    assert unescape(rendered).strip() == expected_output.strip()
+
+
+def test_firm_social_shares_tag(db):
+    template_path = "tests/templatetags/firm_info/test_firm_social_shares.html"
+
+    request = RequestFactory().get('/')
+    context = RequestContext(request)
+
+    # Assuming there is at least one SocialSharing instance.
+    social_sharing = SocialSharingFactory()
+
+    if social_sharing:
+        context["social_sharing"] = social_sharing
+        output = firm_social_shares(context, template_path)
+        template = Template(output)
+        rendered = template.render(context)
+        expected_output = "\n".join([
+            "<div>",
+            f"<img src=\"{social_sharing.og_image.url}\" alt=\"Social Sharing Image\">",
+            f"<p>Description: {social_sharing.og_description}</p>",
+            f"<p>Twitter Site: {social_sharing.og_twitter_site}</p>",
+            "</div>"
+        ])
+        assert unescape(rendered) == expected_output
 
 
 @pytest.mark.parametrize(
@@ -98,19 +175,3 @@ def test_not_rendered_without_objs(db, template_path, Model):
     template = Template(output)
     rendered = template.render(context)
     assert rendered == ""
-
-
-def test_firm_tag_analytic(db):
-    # test on empty db
-    assert "" == firm_tag_analytic()
-    # add on tag
-    tracking = TrackingFactory(tag_analytic="G-XXX-YYY")
-    assert tracking.tag_analytic == firm_tag_analytic()
-    # add a second tag
-    tracking2 = TrackingFactory(tag_analytic="B-XXX-YYY")
-    # main tag is still the first one
-    assert tracking2.tag_analytic != firm_tag_analytic()
-    assert tracking.tag_analytic == firm_tag_analytic()
-    # remove the first tag, tracking2 is the new main tag
-    tracking.delete()
-    assert tracking2.tag_analytic == firm_tag_analytic()

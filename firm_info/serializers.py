@@ -18,10 +18,10 @@ def _format_address(firm_info: dict) -> str:
           `"{address}, {postal_code} {city} {country}"`.
     """
     return "{}, {} {} {}".format(
-        firm_info.get("address"),
-        firm_info.get("postal_code"),
-        firm_info.get("city"),
-        firm_info.get("country"),
+        firm_info.get("address", "NOTFOUND"),
+        firm_info.get("postal_code", "NOTFOUND"),
+        firm_info.get("city", "NOTFOUND"),
+        firm_info.get("country", "NOTFOUND"),
     )
 
 
@@ -61,7 +61,8 @@ def serialize_firm_info(queryset):
             "country": firm_info.get("country"),
         }
     except Exception as err:
-        raise SerializeFirmError from err
+        error_msg = "Failed to serialize firm contact."
+        raise SerializeFirmError(error_msg) from err
 
 
 def serialize_firm_social(queryset):
@@ -80,18 +81,14 @@ def serialize_firm_social(queryset):
     """
 
     try:
-        firm_socials = list(
-            queryset.values(
-                "name",
-                "url",
-            )
-        )
+        firm_socials = queryset.values("name", "url")
         return {
             social.get("name", "NOTFOUND"): social.get("url", "NOTFOUND")
             for social in firm_socials
         }
     except Exception as err:
-        raise SerializeFirmError from err
+        error_msg = "Failed to serialize firm social media information."
+        raise SerializeFirmError(error_msg) from err
 
 
 def serialize_firm_description(queryset):
@@ -117,7 +114,8 @@ def serialize_firm_description(queryset):
             "short_description": firm_info.get("short_description"),
         }
     except Exception as err:
-        raise SerializeFirmError from err
+        error_msg = "Failed to serialize firm description."
+        raise SerializeFirmError(error_msg) from err
 
 
 def serialize_firm_social_sharing(obj):
@@ -146,7 +144,8 @@ def serialize_firm_social_sharing(obj):
         }
 
     except Exception as err:
-        raise SerializeFirmError from err
+        error_msg = "Failed to serialize social sharing information."
+        raise SerializeFirmError(error_msg) from err
 
 
 def serialize_firm_apps_banner(obj):
@@ -175,4 +174,25 @@ def serialize_firm_apps_banner(obj):
         }
 
     except Exception as err:
-        raise SerializeFirmError from err
+        error_msg = "Failed to serialize apps banner information."
+        raise SerializeFirmError(error_msg) from err
+
+
+def serialize_firm_logos(obj):
+    """
+    Serializes logo information from a FirmContact instance.
+
+    Args:
+        firm_instance (FirmContact): An instance of FirmContact containing logos.
+
+    Returns:
+        dict: A dictionary with logo details suitable for rendering in templates.
+    """
+    if obj is None:
+        return {}
+
+    return {
+        "logo": getattr(obj, "logo", None),
+        "logo_invert": getattr(obj, "logo_invert", None),
+        "favicon": getattr(obj, "favicon", None),
+    }

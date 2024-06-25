@@ -5,9 +5,13 @@ from PIL import Image as PILimage
 from django.core.files import File
 
 import factory
-from firm_info.models import Tracking
 
-from .models import AppsBanner, FirmContact
+from firm_info.models import (
+    AppsBanner,
+    FirmContact,
+    SocialSharing,
+    Tracking
+)
 
 
 def create_image_file(filename=None, size=(100, 100), color="blue",
@@ -83,6 +87,10 @@ class TrackingFactory(factory.django.DjangoModelFactory):
         model = Tracking
 
 
+def get_application_type(choice):
+    return choice[0]
+
+
 class AppsBannerFactory(factory.django.DjangoModelFactory):
     """
     Factory to create instance of a AppsBanner.
@@ -90,6 +98,10 @@ class AppsBannerFactory(factory.django.DjangoModelFactory):
 
     title = factory.Faker("text", max_nb_chars=150)
     description = factory.Faker("text", max_nb_chars=150)
+    application_type = factory.Iterator(
+        AppsBanner.APPS_CHOICES,
+        getter=get_application_type
+    )
 
     class Meta:
         model = AppsBanner
@@ -133,4 +145,27 @@ class FirmContactFactory(factory.django.DjangoModelFactory):
 
     @factory.lazy_attribute
     def favicon(self):
+        return create_image_file()
+
+
+class SocialSharingFactory(factory.django.DjangoModelFactory):
+    """
+    Factory to create instance of a AppsBanner.
+    """
+
+    og_twitter_site = factory.Faker("text", max_nb_chars=100)
+    og_description = factory.Faker("text", max_nb_chars=180)
+
+    class Meta:
+        model = SocialSharing
+
+    @factory.lazy_attribute
+    def og_image(self):
+        """
+        Fill file field with generated image.
+
+        Returns:
+            django.core.files.File: File object.
+        """
+
         return create_image_file()
