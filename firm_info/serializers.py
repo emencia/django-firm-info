@@ -196,3 +196,24 @@ def serialize_firm_logos(obj):
         "logo_invert": getattr(obj, "logo_invert", None),
         "favicon": getattr(obj, "favicon", None),
     }
+
+
+def serialize_firm_complete_info(queryset):
+    """
+    Serializes complete firm information from a FirmContact instance.
+
+    Args:
+        firm_instance (FirmContact): An instance of FirmContact.
+
+    Returns:
+        dict: The serialized complete firm information, including logos and 
+        descriptions.
+    """
+    if not queryset.exists():
+        return {}
+
+    return {
+        **serialize_firm_info(queryset),
+        **serialize_firm_description(queryset),
+        **serialize_firm_logos(queryset.first()),
+    }

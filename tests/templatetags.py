@@ -5,10 +5,16 @@ from html import unescape
 from django.template import RequestContext, Template
 from django.test import RequestFactory
 
-from firm_info.factories import AppsBannerFactory, FirmContactFactory, SocialSharingFactory
+from firm_info.factories import (
+    AppsBannerFactory,
+    FirmContactFactory,
+    SocialSharingFactory
+)
 from firm_info.models import FirmContact, Link
+from firm_info.serializers import _format_address
 from firm_info.templatetags.firm_info import (
     app_banner,
+    firm_complete_info,
     firm_contact,
     firm_description,
     firm_logos,
@@ -175,3 +181,32 @@ def test_not_rendered_without_objs(db, template_path, Model):
     template = Template(output)
     rendered = template.render(context)
     assert rendered == ""
+
+
+def test_firm_complete_info_tag(db):
+    firm_contact_obj = FirmContactFactory()
+    template_path = "tests/templatetags/firm_info/test_firm_complete_info.html"
+
+    request = RequestFactory().get('/')
+    context = RequestContext(request)
+
+    context["firm"] = firm_contact_obj
+    output = firm_complete_info(context, template_path)
+    template = Template(output)
+    rendered = template.render(context)
+    expected_output = "\n".join([
+        "<p>Email: {}</p>".format(firm_contact_obj.email),
+        "<p>Phone: {}</p>".format(firm_contact_obj.phone_number),
+        "<p>Full address: {}, {} {} {}</p>".format(
+            firm_contact_obj.address,
+            firm_contact_obj.postal_code,
+            firm_contact_obj.city,
+            firm_contact_obj.country,
+        ),
+        "<p>Baseline: {}</p>".format(firm_contact_obj.baseline),
+        "<p>Description: {}</p>".format(firm_contact_obj.short_description),
+        "<img src=\"{}\" alt=\"Logo\">".format(firm_contact_obj.logo.url),
+        "<img src=\"{}\" alt=\"Inverted Logo\">".format(firm_contact_obj.logo_invert.url),
+        "<link rel=\"shortcut icon\" href=\"{}\">".format(firm_contact_obj.favicon.url)
+    ])
+    assert unescape(rendered) == expected_output

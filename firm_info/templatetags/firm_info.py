@@ -4,6 +4,7 @@ from django.template import Library, loader
 from firm_info.models import AppsBanner, FirmContact, Link, SocialSharing, Tracking
 from firm_info.serializers import (
     serialize_firm_apps_banner,
+    serialize_firm_complete_info,
     serialize_firm_description,
     serialize_firm_info,
     serialize_firm_logos,
@@ -225,3 +226,25 @@ def app_banner(context, app_type, template_path):
     rendered = template.render(combined_context)
 
     return rendered
+
+
+@register.simple_tag(takes_context=True, name="firm_complete_info")
+def firm_complete_info(context, template_path):
+    """
+    Renders the firm's complete information using the specified template.
+
+    Args:
+        template_path (str): The path to the template file.
+
+    Returns:
+        str: The rendered HTML output of the complete firm information.
+    """
+    qs_firm_info = FirmContact.objects.all()
+    if qs_firm_info.exists():
+        template = loader.get_template(template_path)
+        specific_context = serialize_firm_complete_info(qs_firm_info)
+        combined_context = {**context.flatten(), **specific_context}
+        rendered = template.render(combined_context)
+        return rendered
+    else:
+        return ''

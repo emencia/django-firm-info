@@ -125,7 +125,7 @@ class FirmContactFactory(factory.django.DjangoModelFactory):
 
     phone_number = factory.Faker("phone_number")
     email = factory.Faker("email")
-    address = factory.Faker("address")
+    address = factory.Faker("street_address")
     postal_code = factory.Faker("postcode")
     city = factory.Faker("city")
     country = factory.Faker("country")
