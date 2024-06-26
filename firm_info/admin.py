@@ -13,11 +13,6 @@ class UniqueModelAdmin(admin.ModelAdmin):
     This admin class overrides the default add permission to ensure that only one
     instance of the associated model can exist at any given time.
     If an instance already exists, it prohibits adding new instances.
-
-    Methods:
-        has_add_permission(self, request): Checks if adding a new instance is
-            permissible.
-        clean(self): Validates that there is not more than one instance of the model.
     """
 
     def has_add_permission(self, request):

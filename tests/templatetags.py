@@ -11,7 +11,6 @@ from firm_info.factories import (
     SocialSharingFactory
 )
 from firm_info.models import FirmContact, Link
-from firm_info.serializers import _format_address
 from firm_info.templatetags.firm_info import (
     app_banner,
     firm_complete_info,
@@ -206,7 +205,9 @@ def test_firm_complete_info_tag(db):
         "<p>Baseline: {}</p>".format(firm_contact_obj.baseline),
         "<p>Description: {}</p>".format(firm_contact_obj.short_description),
         "<img src=\"{}\" alt=\"Logo\">".format(firm_contact_obj.logo.url),
-        "<img src=\"{}\" alt=\"Inverted Logo\">".format(firm_contact_obj.logo_invert.url),
+        "<img src=\"{}\" alt=\"Inverted Logo\">".format(
+            firm_contact_obj.logo_invert.url
+        ),
         "<link rel=\"shortcut icon\" href=\"{}\">".format(firm_contact_obj.favicon.url)
     ])
     assert unescape(rendered) == expected_output

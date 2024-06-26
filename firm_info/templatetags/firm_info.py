@@ -238,6 +238,14 @@ def firm_complete_info(context, template_path):
 
     Returns:
         str: The rendered HTML output of the complete firm information.
+
+    Usage:
+
+    .. code-block:: html
+
+        {% load firm_info %}
+        {% firm_complete_info "path/to/template.html" %}
+
     """
     qs_firm_info = FirmContact.objects.all()
     if qs_firm_info.exists():

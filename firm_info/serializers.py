@@ -187,15 +187,22 @@ def serialize_firm_logos(obj):
 
     Returns:
         dict: A dictionary with logo details suitable for rendering in templates.
+
+    Raises:
+        SerializeFirmError: Raised when an error occurs during serialization.
     """
     if obj is None:
         return {}
 
-    return {
-        "logo": getattr(obj, "logo", None),
-        "logo_invert": getattr(obj, "logo_invert", None),
-        "favicon": getattr(obj, "favicon", None),
-    }
+    try:
+        return {
+            "logo": getattr(obj, "logo", None),
+            "logo_invert": getattr(obj, "logo_invert", None),
+            "favicon": getattr(obj, "favicon", None),
+        }
+    except Exception as err:
+        error_msg = "Failed to serialize firm social logos."
+        raise SerializeFirmError(error_msg) from err
 
 
 def serialize_firm_complete_info(queryset):
@@ -206,14 +213,21 @@ def serialize_firm_complete_info(queryset):
         firm_instance (FirmContact): An instance of FirmContact.
 
     Returns:
-        dict: The serialized complete firm information, including logos and 
+        dict: The serialized complete firm information, including logos and
         descriptions.
+
+    Raises:
+        SerializeFirmError: Raised when an error occurs during serialization.
     """
     if not queryset.exists():
         return {}
 
-    return {
-        **serialize_firm_info(queryset),
-        **serialize_firm_description(queryset),
-        **serialize_firm_logos(queryset.first()),
-    }
+    try:
+        return {
+            **serialize_firm_info(queryset),
+            **serialize_firm_description(queryset),
+            **serialize_firm_logos(queryset.first()),
+        }
+    except Exception as err:
+        error_msg = "Failed to serialize firm social complete information."
+        raise SerializeFirmError(error_msg) from err
