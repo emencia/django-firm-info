@@ -5,5 +5,5 @@ Exceptions
 ==========
 
 .. automodule:: firm_info.exceptions
-    :members: SerializeFirmError
-    :exclude-members: MyAppBaseException
+    :members:
+    :exclude-members:

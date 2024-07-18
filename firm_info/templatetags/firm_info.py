@@ -4,8 +4,10 @@ from django.template import Library, loader
 from firm_info.models import AppsBanner, FirmContact, Link, SocialSharing, Tracking
 from firm_info.serializers import (
     serialize_firm_apps_banner,
+    serialize_firm_complete_info,
     serialize_firm_description,
     serialize_firm_info,
+    serialize_firm_logos,
     serialize_firm_social,
     serialize_firm_social_sharing,
 )
@@ -129,11 +131,7 @@ def firm_logos(context, template_path):
     firm_instance = FirmContact.objects.first()
     if firm_instance:
         template = loader.get_template(template_path)
-        specific_context = {
-            "logo": getattr(firm_instance, "logo", None),
-            "logo_invert": getattr(firm_instance, "logo_invert", None),
-            "favicon": getattr(firm_instance, "favicon", None),
-        }
+        specific_context = serialize_firm_logos(firm_instance)
         combined_context = {**context.flatten(), **specific_context}
         rendered = template.render(combined_context)
         return rendered
@@ -162,11 +160,12 @@ def firm_social_shares(context, template_path):
         {% firm_social_shares "path/to/template.html" %}
 
     """
-    social_shares = SocialSharing.objects.first()
+    social_shares = SocialSharing.objects.all()
 
-    if social_shares:
+    if social_shares.exists():
+        social_share = social_shares.first()
         template = loader.get_template(template_path)
-        specific_context = serialize_firm_social_sharing(social_shares)
+        specific_context = serialize_firm_social_sharing(social_share)
         combined_context = {**context.flatten(), **specific_context}
         rendered = template.render(combined_context)
 
@@ -218,7 +217,6 @@ def app_banner(context, app_type, template_path):
         {% app_banner "path/to/template.html" %}
 
     """
-    context = {}
     template = loader.get_template(template_path)
 
     with contextlib.suppress(ObjectDoesNotExist):
@@ -228,3 +226,33 @@ def app_banner(context, app_type, template_path):
     rendered = template.render(combined_context)
 
     return rendered
+
+
+@register.simple_tag(takes_context=True, name="firm_complete_info")
+def firm_complete_info(context, template_path):
+    """
+    Renders the firm's complete information using the specified template.
+
+    Args:
+        template_path (str): The path to the template file.
+
+    Returns:
+        str: The rendered HTML output of the complete firm information.
+
+    Usage:
+
+    .. code-block:: html
+
+        {% load firm_info %}
+        {% firm_complete_info "path/to/template.html" %}
+
+    """
+    qs_firm_info = FirmContact.objects.all()
+    if qs_firm_info.exists():
+        template = loader.get_template(template_path)
+        specific_context = serialize_firm_complete_info(qs_firm_info)
+        combined_context = {**context.flatten(), **specific_context}
+        rendered = template.render(combined_context)
+        return rendered
+    else:
+        return ''

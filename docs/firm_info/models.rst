@@ -5,5 +5,5 @@ Models
 ======
 
 .. automodule:: firm_info.models
-    :members: FirmContact, Link, SocialSharing, Tracking, AppsBanner, 
+    :members:
     :exclude-members: DoesNotExist, MultipleObjectsReturned

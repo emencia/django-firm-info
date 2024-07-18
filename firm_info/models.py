@@ -11,9 +11,6 @@ class FirmContact(models.Model):
     """
     Represents the contact information for a firm.
 
-    Args:
-        models.Model: The base model class provided by Django.
-
     Attributes:
         phone_number (CharField): The phone number of the firm.
         email (EmailField): The email address of the firm.
@@ -131,6 +128,7 @@ class SocialSharing(models.Model):
         og_image (SmartMediaField): The OG image for social media sharing.
         og_description (TextField): The OG description for social media sharing.
         og_twitter_site (CharField): The OG Twitter site for social media sharing.
+        objects (SingletonManager): The manager for the FirmContact model.
     """
 
     og_image = SmartMediaField(
@@ -153,6 +151,8 @@ class SocialSharing(models.Model):
         default="",
         verbose_name=_("OG Twitter Site"),
     )
+
+    objects = SingletonManager()
 
     class Meta:
         verbose_name = _("Social media share")
@@ -180,6 +180,7 @@ class Tracking(models.Model):
 
     Attributes:
         tag_analytic (CharField): The tag analytic for tracking.
+        objects (SingletonManager): The manager for the FirmContact model.
     """
 
     tag_analytic = models.CharField(
@@ -190,6 +191,8 @@ class Tracking(models.Model):
         verbose_name=_("Tag Analytic"),
     )
 
+    objects = SingletonManager()
+
     class Meta:
         verbose_name = _("Tracking")
         verbose_name_plural = _("Tracks")
@@ -198,9 +201,6 @@ class Tracking(models.Model):
 class AppsBanner(models.Model):
     """
     Represents an app banner in the Django firm_info models.
-
-    Args:
-        models.Model: The base model class provided by Django.
 
     Attributes:
         APPS_CHOICES (list): A list of tuples representing the available choices for
