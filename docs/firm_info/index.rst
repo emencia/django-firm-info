@@ -9,6 +9,12 @@ Django firm info
 
    models.rst
 
+   admin.rst
+
+   factories.rst
+
+   settings.rst
+
    serializers.rst
 
    templatetags.rst

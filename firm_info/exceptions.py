@@ -3,7 +3,7 @@ Specific application exceptions.
 """
 
 
-class MyAppBaseException(Exception):
+class FirmInfoException(Exception):
     """
     Exception base.
 
@@ -13,9 +13,6 @@ class MyAppBaseException(Exception):
     pass
 
 
-class SerializeFirmError(MyAppBaseException):
-    """
-    Exceptions related to FirmContact serialization errors
-    during template tag generation.
-    """
+class SerializeFirmError(FirmInfoException):
+    """Exception raised when serializing firm data encounters an error."""
     pass
