@@ -4,6 +4,37 @@
 History
 =======
 
+0.1.6 (2024-07-18)
+------------------
+
+New
+~~~
+*  Added complete FirmContact templatetag. [Samy Saad]
+
+
+Changes
+~~~~~~~
+*  Enhanced code&tests quality. [Samy Saad]
+
+  Added test for app_banner templatetag + test template
+  Added test for firm_logos templatetag + test template
+  Added test for social_sharing templatetag + test template
+  Added Singleton tests
+  Added post_delete and post_save signals tests
+
+  Added SingletonManager for SocialSharing and Tracking models
+  Added UniqueModelAdmin that reflect the behaviour of a singleton in admin
+
+  Improved AppsBannerFactory
+  Added SocialSharingFactory
+
+  Added firm_logos serializer
+
+Other
+~~~~~
+* [DOC] Improved documentation. [Samy Saad]
+
+
 0.1.5 (2024-05-30)
 ------------------
 
