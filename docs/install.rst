@@ -1,3 +1,6 @@
+.. _djangocms-text: https://github.com/django-cms/djangocms-text
+.. _djangocms-text-ckeditor: https://github.com/django-cms/djangocms-text-ckeditor
+
 .. _intro_install:
 
 =======
@@ -19,6 +22,7 @@ Add it to your installed Django apps in settings : ::
 
     INSTALLED_APPS = (
         ...
+        "sorl.thumbnail",
         "smart_media",
         "firm_info",
     )
@@ -41,6 +45,17 @@ settings.
     `SmartMedia configuration documentation <https://django-smart-media.readthedocs.io/en/latest/install.html#configuration>`_.
 
 Finally you will have to apply database migrations.
+
+
+Description editor
+******************
+
+The description field from ``AppsBanner`` model use the Django builtin ``Textarea``
+widget on default.
+
+However inside a DjangoCMS project it will adopt the editor widget enabled from either
+`djangocms-text-ckeditor`_ or `djangocms-text-ckeditor`_ if installed, in case they are
+both installed (which is wrong) the first has highest priority.
 
 
 Settings

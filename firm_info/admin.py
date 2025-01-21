@@ -3,6 +3,7 @@ from django.core.exceptions import ValidationError
 from django.utils.translation import gettext_lazy as _
 from smart_media.admin import SmartModelAdmin
 
+from .forms import AppsBannerForm
 from .models import AppsBanner, FirmContact, Link, SocialSharing, Tracking
 
 
@@ -27,7 +28,7 @@ class UniqueModelAdmin(admin.ModelAdmin):
         if existing_count > 1:
             # raise validation error if there is more than one firm contact
             raise ValidationError(
-                _("Only one {} instance allowed.").format(self.model.__name__)
+                _("Only one {} instance is allowed.").format(self.model.__name__)
             )
 
 
@@ -60,3 +61,4 @@ class TrackingAdmin(UniqueModelAdmin):
 @admin.register(AppsBanner)
 class AppsBannerAdmin(admin.ModelAdmin):
     formfield_overrides = SmartModelAdmin.formfield_overrides
+    form = AppsBannerForm

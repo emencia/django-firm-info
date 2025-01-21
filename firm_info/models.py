@@ -1,7 +1,6 @@
 from django.db import models
 from django.db.models.signals import post_delete, pre_save
 from django.utils.translation import gettext_lazy as _
-from djangocms_text_ckeditor.fields import HTMLField
 from firm_info.managers import SingletonManager
 from smart_media.modelfields import SmartMediaField
 from smart_media.signals import auto_purge_files_on_change, auto_purge_files_on_delete
@@ -23,7 +22,7 @@ class FirmContact(models.Model):
         logo (SmartMediaField): The logo of the firm.
         logo_invert (SmartMediaField): The inverted logo of the firm.
         favicon (SmartMediaField): The favicon of the firm.
-        objects (SingletonManager): The manager for the FirmContact model.
+        objects (SingletonManager): Custom manager.
     """
     phone_number = models.CharField(max_length=20, null=False, blank=True, default="")
     email = models.EmailField(null=False, blank=True, default="")
@@ -208,7 +207,7 @@ class AppsBanner(models.Model):
         application_type (models.CharField): The type of the application.
         image (SmartMediaField): The image associated with the app banner.
         title (models.CharField): The title of the app banner.
-        description (HTMLField): The description of the app banner.
+        description (models.TextField): The description of the app banner.
     """
 
     APPS_CHOICES = [
@@ -229,7 +228,11 @@ class AppsBanner(models.Model):
         upload_to="firm/apps_banner/%y/%m",
     )
     title = models.CharField(_("Title"), max_length=150, blank=True, null=True)
-    description = HTMLField(verbose_name=_("Description"), blank=True, null=True)
+    description = models.TextField(
+        verbose_name=_("Description"),
+        blank=True,
+        null=True
+    )
 
     def __str__(self):
         return self.get_application_type_display()
