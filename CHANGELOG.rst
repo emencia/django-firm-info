@@ -5,6 +5,14 @@ History
 =======
 
 
+0.2.3 (2025-01-23)
+------------------
+
+Changes
+~~~~~~~
+*  Try to run publish on pypi after release created. [Lafaye Philippe]
+
+
 0.2.2 (2025-01-23)
 ------------------
 
