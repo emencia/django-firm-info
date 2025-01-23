@@ -5,6 +5,34 @@ History
 =======
 
 
+0.2.0 (2025-01-23)
+------------------
+
+New
+~~~
+*  Add gitchangelog and makotemplate as requirements for release. [Lafaye Philippe]
+
+*  Add conf file for gitchangelog. [Lafaye Philippe]
+
+
+Changes
+~~~~~~~
+*  Major upgrade to modernize package and fix issues with CKEditor usage. [David THENON]
+
+  - Added support for Python 3.11;
+  - Removed support for Python 3.8;
+  - Added support for Django>=5.0;
+  - Removed support for Django<4.2;
+  - Moved history into 'CHANGELOG.rst';
+  - Changed requirements to remove 'djangocms-text-ckeditor';
+  - Added compatibility layer to allow usage 'djangocms-text-ckeditor' or 'djangocms-text'
+    if installed else as default the Django Textarea is used;
+  - Upgraded all extra requirements to recent versions;
+  - Changed documentation theme to 'Furo';
+  - Updated documentation;
+  - Upgraded script to freeze requirements;
+  - Renamed default settings 'CLIENT_NAME' to 'FIRMINFO_APP_NAME' and filled it with a proper default name;
+
 0.1.6 (2024-07-18)
 ------------------
 
