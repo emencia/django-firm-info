@@ -5,6 +5,14 @@ History
 =======
 
 
+0.2.7 (2025-01-23)
+------------------
+
+Fix
+~~~
+*  Set publish on test-pypi and pypi into separate jobs. [Lafaye Philippe]
+
+
 0.2.6 (2025-01-23)
 ------------------
 
