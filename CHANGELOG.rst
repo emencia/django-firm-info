@@ -5,6 +5,14 @@ History
 =======
 
 
+0.2.2 (2025-01-23)
+------------------
+
+Fix
+~~~
+*  Syntax error on github action files. [Lafaye Philippe]
+
+
 0.2.1 (2025-01-23)
 ------------------
 
