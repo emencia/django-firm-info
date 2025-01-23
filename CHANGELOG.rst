@@ -5,6 +5,14 @@ History
 =======
 
 
+0.2.1 (2025-01-23)
+------------------
+
+Changes
+~~~~~~~
+*  Change release creator action and use verbose mode on pypi publish on test.pypi.org. [Lafaye Philippe]
+
+
 0.2.0 (2025-01-23)
 ------------------
 
