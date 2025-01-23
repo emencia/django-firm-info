@@ -3,6 +3,10 @@ on:
     # Sequence of patterns matched against refs/tags
     tags:
       - '[0-9]+.[0-9]+.[0-9]+'
+  workflow_run:
+    workflows: [Test]
+    branches: [master]
+    types: [completed]
 
 name: Create Release
 
@@ -16,6 +20,6 @@ jobs:
       - name: Create a Release
         uses: softprops/action-gh-release@v2
         with:
-          files: CHANGELOG.rst
+          body_path: CHANGELOG.rst
           token: ${{ secrets.GITHUB_TOKEN }}
 
