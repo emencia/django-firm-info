@@ -33,6 +33,8 @@ MANAGERS = ADMINS
 
 DATABASES = {}
 
+MIGRATION_MODULES = {}
+
 # Hosts/domain names that are valid for this site; required if DEBUG is False
 # See https://docs.djangoproject.com/en/1.5/ref/settings/#allowed-hosts
 ALLOWED_HOSTS = ["*"]
@@ -151,6 +153,37 @@ LOGOUT_REDIRECT_URL = "/"
 # Ensure we can override applications widgets templates from project template
 # directory, require also 'django.forms' in INSTALLED_APPS
 FORM_RENDERER = "django.forms.renderers.TemplatesSetting"
+
+"""
+Text editor configuration
+
+Lotus plugin itself does not use editor this is only for DjangoCMS usage.
+
+We safely try to use the one from 'djangocms_text' if available else
+'djangocms_text_ckeditor' and finally if none of these are available we don't install
+any apps since we fallback to the builtin Django Textarea widget.
+"""
+try:
+    import djangocms_text  # noqa: F401,F403
+except ImportError:
+    try:
+        import djangocms_text_ckeditor  # noqa: F401,F403
+    except ImportError:
+        # Application will use Django Textarea widget
+        pass
+    else:
+        INSTALLED_APPS.extend([
+            "djangocms_text_ckeditor",
+        ])
+else:
+    INSTALLED_APPS.extend([
+        "djangocms_text",
+        "djangocms_text.contrib.text_ckeditor4",
+    ])
+
+    TEXT_EDITOR = "djangocms_text.contrib.text_ckeditor4.ckeditor4"
+    # We don't enable cms so there is no need of its models
+    MIGRATION_MODULES["djangocms_text"] = None
 
 
 """

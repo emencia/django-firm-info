@@ -1,6 +1,4 @@
-from ..defaults import (
-    CLIENT_NAME,
-)
+from ..defaults import FIRMINFO_APP_NAME
 
 
 class FirmInfosDefaultSettings:
@@ -15,9 +13,9 @@ class FirmInfosDefaultSettings:
             from firm_info.contrib.django_configuration import FirmInfosDefaultSettings
 
             class Dev(FirmInfosDefaultSettings, Configuration):
-                CLIENT_NAME = "Myclient"
+                FIRMINFO_APP_NAME = "Myclient"
 
-        This will override the setting ``CLIENT_NAME``
+        This will override the setting ``FIRMINFO_APP_NAME``
     """  # noqa: E501
 
-    CLIENT_NAME = CLIENT_NAME
+    FIRMINFO_APP_NAME = FIRMINFO_APP_NAME

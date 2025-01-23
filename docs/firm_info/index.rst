@@ -8,17 +8,9 @@ Django firm info
    :maxdepth: 2
 
    models.rst
-
    admin.rst
-
    factories.rst
-
-   settings.rst
-
    serializers.rst
-
    templatetags.rst
-
    exceptions.rst
-
    managers.rst

@@ -20,7 +20,7 @@ __pycache__/
 /sandbox/static-sources
 
 # Settings
-local.py
+/sandbox/settings/localsettings.py
 
 # Node.js stuff
 /frontend/node_modules

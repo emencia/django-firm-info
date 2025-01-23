@@ -1,4 +1,4 @@
-"""A system to compose project parts from applications enabled in a manifest"""
+"""A Django application package for storage firm info"""
 from importlib.metadata import version
 
 

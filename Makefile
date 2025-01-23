@@ -13,7 +13,7 @@ TWINE_BIN=$(VENV_PATH)/bin/twine
 DJANGO_MANAGE_BIN=$(PYTHON_BIN) $(DJANGO_MANAGE_PATH)
 FLAKE_BIN=$(VENV_PATH)/bin/flake8
 PYTEST_BIN=$(VENV_PATH)/bin/pytest
-SPHINX_RELOAD_BIN=$(PYTHON_BIN) sphinx_reload.py
+SPHINX_RELOAD_BIN=$(PYTHON_BIN) docs/sphinx_reload.py
 
 DEMO_DJANGO_SECRET_KEY=samplesecretfordev
 PACKAGE_NAME=django-firm-info
@@ -97,9 +97,6 @@ venv:
 	@echo "==== Install virtual environment ===="
 	@echo ""
 	virtualenv -p $(PYTHON_INTERPRETER) $(VENV_PATH)
-	# This is required for those ones using old distribution
-	$(PIP_BIN) install --upgrade pip
-	$(PIP_BIN) install --upgrade setuptools
 .PHONY: venv
 
 create-var-dirs:
@@ -114,7 +111,7 @@ install: venv create-var-dirs
 	@echo ""
 	@echo "==== Install everything for development ===="
 	@echo ""
-	$(PIP_BIN) install -e .[dev,quality,doc,release]
+	$(PIP_BIN) install -e .[dev,quality,doc,doc-live,release]
 	${MAKE} migrate
 .PHONY: install
 
@@ -227,7 +224,7 @@ freeze-dependencies:
 	@echo ""
 	@echo "==== Freezing backend dependencies versions ===="
 	@echo ""
-	$(PYTHON_BIN) freezer.py
+	$(PYTHON_BIN) freezer.py ${PACKAGE_NAME} --destination=frozen.txt
 .PHONY: freeze-dependencies
 
 tox:
