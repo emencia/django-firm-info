@@ -18,4 +18,5 @@ jobs:
         with:
           body_path: CHANGELOG.rst
           token: ${{ secrets.GITHUB_TOKEN }}
-
+          name: ${{ github.ref_name }}
+          tag_name: ${{ github.ref_name }}
