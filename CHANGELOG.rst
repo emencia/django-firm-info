@@ -5,6 +5,14 @@ History
 =======
 
 
+0.2.5 (2025-01-23)
+------------------
+
+Changes
+~~~~~~~
+*  Try tu run release creation after test succeed on tag. [Lafaye Philippe]
+
+
 0.2.4 (2025-01-23)
 ------------------
 
