@@ -5,6 +5,14 @@ History
 =======
 
 
+0.2.6 (2025-01-23)
+------------------
+
+Changes
+~~~~~~~
+*  Try to get tag name for release creation. [Lafaye Philippe]
+
+
 0.2.5 (2025-01-23)
 ------------------
 
