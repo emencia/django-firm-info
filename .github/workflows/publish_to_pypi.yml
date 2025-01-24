@@ -1,4 +1,4 @@
-name: Publish Python 🐍 distributions 📦 to PyPI and TestPyPI
+name: Publish Python 🐍 distributions 📦 to TestPyPI
 
 on:
   workflow_run:
@@ -41,7 +41,7 @@ jobs:
         repository-url: https://test.pypi.org/legacy/
   build-n-publish:
     needs: build-n-publish-test
-    name: Build and publish Python 🐍 distributions 📦 to PyPI and TestPyPI
+    name: Build and publish Python 🐍 distributions 📦 to PyPI
     runs-on: ubuntu-latest
     # Specifying a GitHub environment is optional, but strongly encouraged
     environment: release
