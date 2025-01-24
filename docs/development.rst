@@ -7,6 +7,7 @@
 .. _tox: http://tox.readthedocs.io
 .. _livereload: https://livereload.readthedocs.io
 .. _twine: https://twine.readthedocs.io
+.. _gitchangelog: https://github.com/vaab/gitchangelog 
 
 .. _intro_development:
 
@@ -81,23 +82,37 @@ Then go on ``http://localhost:8002/`` or your server machine IP with port 8002.
 Note that you need to build the documentation at least once before using
 ``livedocs``.
 
-Releasing
----------
+Github Workflow and releasing
+-----------------------------
 
-Before releasing, you must ensure about quality, use the command below to run every
-quality check tasks: ::
+We maintain two main branches: `dev` and `master`. The `dev` branch contains
+all pre-release code, while the `master` branch holds the released code.
 
-    make quality
+Development is conducted in secondary branches specific to individual features
+or fixes. Once the code is ready for release, it is merged into `dev`.
 
-If quality is correct and after you have correctly push all your commits
-you can proceed to release: ::
+To create a new release, follow these steps:
 
-    make release
+1. Update the `CHANGELOG.rst` file with the latest changes.
+2. Update the version number in `setup.cfg` to reflect the next release version.
+3. Create a tag corresponding to the next release version.
+4. Merge the `dev` branch into `master`.
 
-This will build the package release and send it to Pypi with `twine`_.
-You will have to
-`configure your Pypi account <https://twine.readthedocs.io/en/latest/#configuration>`_
-on your machine to avoid to input it each time.
+These steps can be streamlined using the `gitchangelog`_ tool (conf files are included in repo).
+
+After the tag/master is pushed to GitHub, the CI/CD pipeline will handle the remaining
+tasks and create automatically a github release and publish package on pypi.
+
+CI/CD
+-----
+
+Three GitHub Actions scripts manage the CI/CD pipeline:
+
+- **test_with_tox.yml**: Runs tests on each code push to the repository.
+- **create_release_from_tag.yml**: Automatically creates a release when a tag
+  is pushed, provided all tests pass. 
+- **publish_to_pypi.yml**: Publishes the release to PyPI. Before publishing to
+  the main PyPI, a test release is conducted on test.pypi.org.
 
 Contribution
 ------------
