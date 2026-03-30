@@ -10,6 +10,7 @@ PYTHON_BIN=$(VENV_PATH)/bin/python
 PIP_BIN=$(VENV_PATH)/bin/pip
 TOX_BIN=$(VENV_PATH)/bin/tox
 TWINE_BIN=$(VENV_PATH)/bin/twine
+GITCLIFF_BIN=$(VENV_PATH)/bin/git-cliff
 DJANGO_MANAGE_BIN=$(PYTHON_BIN) $(DJANGO_MANAGE_PATH)
 FLAKE_BIN=$(VENV_PATH)/bin/flake8
 PYTEST_BIN=$(VENV_PATH)/bin/pytest
@@ -51,6 +52,7 @@ help:
 	@echo "  freeze-dependencies           -- to write a frozen.txt file with installed dependencies versions"
 	@echo "  quality                       -- to launch Flake8 checking and every tests suites"
 	@echo
+	@echo "  changelog                     -- to generate CHANGELOG.md with git-cliff"
 	@echo "  check-release                 -- to check package release before uploading it to PyPi"
 	@echo "  release                       -- to release package for latest version on PyPi (once release has been pushed to repository)"
 	@echo
@@ -112,7 +114,7 @@ install: venv create-var-dirs
 	@echo "==== Install everything for development ===="
 	@echo ""
 	$(PIP_BIN) install -e .[dev,quality,doc,doc-live,release]
-	${MAKE} migrate
+	#${MAKE} migrate
 .PHONY: install
 
 migrations:
@@ -233,6 +235,13 @@ tox:
 	@echo ""
 	$(TOX_BIN)
 .PHONY: tox
+
+changelog:
+	@echo ""
+	@echo "==== Generating CHANGELOG.md ===="
+	@echo ""
+	$(GITCLIFF_BIN) -o CHANGELOG.md
+.PHONY: changelog
 
 build-package:
 	@echo ""

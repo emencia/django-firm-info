@@ -26,7 +26,8 @@ django.setup()
 
 
 # Get the module version
-from firm_info import __version__ as firm_info_version
+# from firm_info import __version__ as firm_info_version
+firm_info_version = "0.2.7"
 
 
 # -- Project information -----------------------------------------------------
@@ -52,6 +53,7 @@ extensions = [
     "sphinx.ext.viewcode",
     "sphinx.ext.napoleon",
     "sphinx.ext.todo",
+    "myst_parser",
 ]
 
 # Add any paths that contain templates here, relative to this directory.

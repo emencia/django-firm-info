@@ -1,0 +1,14 @@
+[tool.semantic_release]
+tag_format = "{version}"
+commit_message = "chore(release): {version}"
+major_on_zero = false
+version_variables = [
+    "setup.cfg:version",
+    "docs/conf.py:firm_info_version",
+]
+
+[tool.semantic_release.remote]
+type = "github"
+
+[tool.semantic_release.publish]
+upload_to_vcs_release = false

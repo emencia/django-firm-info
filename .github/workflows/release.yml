@@ -1,0 +1,71 @@
+name: Release
+
+on:
+  push:
+    branches: [master]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ['3.9', '3.10', '3.11']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install dependencies
+        run: pip install tox tox-gh-actions
+      - name: Test with tox
+        run: tox
+
+  release:
+    needs: test
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: actions/setup-python@v4
+        with:
+          python-version: "3.x"
+
+      - name: Install tools
+        run: pip install python-semantic-release git-cliff
+
+      - name: Bump version
+        id: semver
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          semantic-release version --push
+          TAG=$(git tag --points-at HEAD)
+          echo "tag=$TAG" >> $GITHUB_OUTPUT
+
+      - name: Update CHANGELOG.md
+        if: steps.semver.outputs.tag != ''
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git-cliff -o CHANGELOG.md
+          git add CHANGELOG.md
+          git diff --staged --quiet || git commit -m "chore: update CHANGELOG.md for ${{ steps.semver.outputs.tag }}"
+          git push origin master
+
+      - name: Generate release notes
+        if: steps.semver.outputs.tag != ''
+        run: git-cliff --current --strip all -o release_notes.md
+
+      - name: Create GitHub Release
+        if: steps.semver.outputs.tag != ''
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create "${{ steps.semver.outputs.tag }}" \
+            --title "${{ steps.semver.outputs.tag }}" \
+            --notes-file release_notes.md
