@@ -49,7 +49,8 @@ def serialize_firm_info(queryset):
 
     try:
         firm_info = queryset.values(
-            "phone_number", "email", "address", "postal_code", "city", "country"
+            "phone_number", "email", "address", "postal_code", "city", "country",
+            "latitude", "longitude",
         ).first()
         return {
             "email": firm_info.get("email"),
@@ -59,6 +60,8 @@ def serialize_firm_info(queryset):
             "postal_code": firm_info.get("postal_code"),
             "city": firm_info.get("city"),
             "country": firm_info.get("country"),
+            "latitude": firm_info.get("latitude"),
+            "longitude": firm_info.get("longitude"),
         }
     except Exception as err:
         error_msg = "Failed to serialize firm contact."

@@ -1,9 +1,26 @@
 import pytest
+from decimal import Decimal
 
 from firm_info.factories import (
     FirmContactFactory, SocialSharingFactory, TrackingFactory
 )
 from firm_info.managers import SINGLETON_ERROR
+
+
+def test_firm_contact_geo_coordinates_fields_exist(db):
+    """FirmContact must have optional latitude and longitude fields."""
+    firm = FirmContactFactory(latitude=Decimal("48.884500"), longitude=Decimal("2.269400"))
+    firm.refresh_from_db()
+    assert firm.latitude == Decimal("48.884500")
+    assert firm.longitude == Decimal("2.269400")
+
+
+def test_firm_contact_geo_coordinates_default_to_none(db):
+    """latitude and longitude must be nullable/blank."""
+    firm = FirmContactFactory()
+    firm.refresh_from_db()
+    assert firm.latitude is None
+    assert firm.longitude is None
 
 
 def test_singleton_firm_contact(db):

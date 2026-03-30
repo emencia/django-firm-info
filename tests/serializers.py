@@ -1,3 +1,5 @@
+from decimal import Decimal
+
 from firm_info.factories import (
     AppsBannerFactory, FirmContactFactory, SocialSharingFactory
 )
@@ -36,8 +38,28 @@ def test_serialize_firm_info(db):
             .first()
         ),
         "postal_code": firm_contact_obj.postal_code,
+        "latitude": firm_contact_obj.latitude,
+        "longitude": firm_contact_obj.longitude,
     }
     assert serialize_firm_info(queryset) == expected_output
+
+
+def test_serialize_firm_info_includes_geo_coordinates(db):
+    """serialize_firm_info must expose latitude and longitude."""
+    firm = FirmContactFactory(latitude=Decimal("48.884500"), longitude=Decimal("2.269400"))
+    queryset = FirmContact.objects.all()
+    result = serialize_firm_info(queryset)
+    assert result["latitude"] == firm.latitude
+    assert result["longitude"] == firm.longitude
+
+
+def test_serialize_firm_info_geo_coordinates_none_when_not_set(db):
+    """serialize_firm_info must return None for coordinates when not set."""
+    FirmContactFactory()
+    queryset = FirmContact.objects.all()
+    result = serialize_firm_info(queryset)
+    assert result["latitude"] is None
+    assert result["longitude"] is None
 
 
 def test_serialize_firm_social(db, firm_social_links_objs):
@@ -111,6 +133,8 @@ def test_serialize_firm_complete_info(db):
         "logo": firm_contact_obj.logo,
         "logo_invert": firm_contact_obj.logo_invert,
         "favicon": firm_contact_obj.favicon,
+        "latitude": firm_contact_obj.latitude,
+        "longitude": firm_contact_obj.longitude,
     }
     serialized_data = serialize_firm_complete_info(queryset)
     assert serialized_data == expected_output
