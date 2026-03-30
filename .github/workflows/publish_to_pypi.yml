@@ -1,72 +1,46 @@
-name: Publish Python 🐍 distributions 📦 to TestPyPI
+name: Publish to PyPI
 
 on:
-  workflow_run:
-    workflows: [Create Release]
-    types: [completed]
+  release:
+    types: [published]
 
 jobs:
   build-n-publish-test:
-    name: Build and publish Python 🐍 distributions 📦 to PyPI and TestPyPI
+    name: Publish to TestPyPI
     runs-on: ubuntu-latest
-    # Specifying a GitHub environment is optional, but strongly encouraged
     environment: release
     permissions:
-      # IMPORTANT: this permission is mandatory for trusted publishing
       id-token: write
     steps:
-    - uses: actions/checkout@v3
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: "3.x"
-    - name: Install pypa/build
-      run: >-
-        python3 -m
-        pip install
-        build
-        --user
-    - name: Build a binary wheel and a source tarball
-      run: >-
-        python3 -m
-        build
-        --sdist
-        --wheel
-        --outdir dist/
-        .
-    - name: Publish distribution 📦 to Test PyPI
-      uses: pypa/gh-action-pypi-publish@release/v1
-      with:
-        verbose: true
-        repository-url: https://test.pypi.org/legacy/
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v4
+        with:
+          python-version: "3.x"
+      - name: Install build
+        run: pip install build
+      - name: Build package
+        run: python -m build --sdist --wheel --outdir dist/ .
+      - name: Publish to TestPyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          verbose: true
+          repository-url: https://test.pypi.org/legacy/
+
   build-n-publish:
     needs: build-n-publish-test
-    name: Build and publish Python 🐍 distributions 📦 to PyPI
+    name: Publish to PyPI
     runs-on: ubuntu-latest
-    # Specifying a GitHub environment is optional, but strongly encouraged
     environment: release
     permissions:
-      # IMPORTANT: this permission is mandatory for trusted publishing
       id-token: write
     steps:
-    - uses: actions/checkout@v3
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: "3.x"
-    - name: Install pypa/build
-      run: >-
-        python3 -m
-        pip install
-        build
-        --user
-    - name: Build a binary wheel and a source tarball
-      run: >-
-        python3 -m
-        build
-        --sdist
-        --wheel
-        --outdir dist/
-        .
-    - name: Publish distribution 📦 to PyPI
-      uses: pypa/gh-action-pypi-publish@release/v1
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v4
+        with:
+          python-version: "3.x"
+      - name: Install build
+        run: pip install build
+      - name: Build package
+        run: python -m build --sdist --wheel --outdir dist/ .
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
