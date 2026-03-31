@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file.
 
+## [0.3.0] - 2026-03-31
+
+### 🚀 Features
+
+- Add latitude and longitude fields to FirmContact
+- Add Python 3.12 and Django 6.0 to test matrix
+- Migrate to git-cliff + python-semantic-release with Conventional Commits
+
+### 🐛 Bug Fixes
+
+- Add pythonpath config to fix sandbox module resolution on Python 3.12
+- Upgrade GitHub Actions to Node.js 24 compatible versions
+
 ## [0.2.7] - 2025-01-23
 
 ### 🐛 Bug Fixes
