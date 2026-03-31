@@ -27,7 +27,7 @@ django.setup()
 
 # Get the module version
 # from firm_info import __version__ as firm_info_version
-firm_info_version = "0.2.7"
+firm_info_version = "1.0.0"
 
 
 # -- Project information -----------------------------------------------------
