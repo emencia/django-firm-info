@@ -2,6 +2,7 @@
 tag_format = "{version}"
 commit_message = "chore(release): {version}"
 major_on_zero = false
+allow_zero_version = true
 version_variables = [
     "setup.cfg:version",
     "docs/conf.py:firm_info_version",

@@ -2,13 +2,6 @@
 
 All notable changes to this project will be documented in this file.
 
-## [unreleased]
-
-### 🚀 Features
-
-- Update doc for releasing
-- Fix some status text on publish_to_pypi.yml action script
-
 ## [0.2.7] - 2025-01-23
 
 ### 🐛 Bug Fixes
